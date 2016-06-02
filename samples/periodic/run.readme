@@ -1,0 +1,17 @@
+Requirements:
+- Java 8
+
+Usage:
+    java -jar ws-imitator.jar -b periodic-data -c periodic.xml -X:persistence
+or
+    java -jar ws-imitator.jar -p PORT_NUMBER -b periodic-data -c periodic.xml -X:persistence
+
+Stop:
+    java -jar ws-imitator.jar -s
+or
+    java -jar ws-imitator.jar -p PORT_NUMBER -s
+
+Default PORT_NUMBER is 8642.
+
+wsdl address is http://www.webservicex.com/periodictable.asmx?wsdl
+endpoint address is http://localhost:PORT_NUMBER/periodictable.asmx

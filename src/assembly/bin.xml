@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<assembly>
+  <id>bin</id>
+  <formats>
+    <format>tar.gz</format>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <includes>
+        <include>README*</include>
+        <include>LICENSE*</include>
+      </includes>
+    </fileSet>
+  
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>ws-imitator.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+      <outputDirectory>sources</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+    <fileSet>
+      <directory>src</directory>
+      <outputDirectory>sources/src</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+
+    <fileSet>
+      <directory>samples</directory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+
+  </fileSets>
+
+</assembly>

@@ -1,0 +1,19 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <GetAtomicNumberResponse xmlns="http://www.webserviceX.NET">
+         <GetAtomicNumberResult><![CDATA[<NewDataSet>
+  <Table>
+    <AtomicNumber>#{{PT_NUMBER}}</AtomicNumber>
+    <ElementName>#{{PT_NAME}}</ElementName>
+    <Symbol>#{{PT_SYMBOL}}</Symbol>
+    <AtomicWeight>#{{PT_WEIGHT}}</AtomicWeight>
+    <BoilingPoint>#{{PT_BP}}</BoilingPoint>
+    <IonisationPotential>#{{PT_IP}}</IonisationPotential>
+    <AtomicRadius>#{{PT_RADIUS}}</AtomicRadius>
+    <MeltingPoint>#{{PT_MP}}</MeltingPoint>
+    <Density>#{{PT_DENSITY}}</Density>
+  </Table>
+</NewDataSet>]]></GetAtomicNumberResult>
+      </GetAtomicNumberResponse>
+   </soap:Body>
+</soap:Envelope>

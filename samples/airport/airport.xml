@@ -1,0 +1,76 @@
+<!DOCTYPE ws-imitator-config [
+    <!ENTITY wsHost "www.webservicex.net">
+    <!ENTITY wsPort "80">
+]>
+<ws-imitator-config xmlns:v="urn:wsimitator:if:variable" 
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:w="http://www.webserviceX.NET"
+>
+
+    <POST>
+        <uri matches=".*/airport.asmx">
+            <choose>
+                <when test="re:matches(http:header('content-type'), 'application/soap\+xml(;.*)?')">
+                    <variable name="soapVersion">"1.2"</variable>
+                    <variable name="responseType">"application/soap+xml; charset=UTF-8"</variable>
+                    <variable name="soapAction" if-empty="???">re:replace(http:header('content-type'), '.*action="?([^"]+)"?(;.*)?', '$1')</variable>
+                    <if v:soapAction="???">
+                        <variable name="soapAction">xpath:string("local-name(/soap:Envelope/soap:Body/w:*)")</variable>
+                    </if>
+                </when>
+                <when test="re:matches(http:header('content-type'), 'text/xml(;.*)?')">
+                    <variable name="soapVersion">'1.1'</variable>
+                    <variable name="responseType">'text/xml; charset=UTF-8'</variable>
+                    <variable name="soapAction" if-empty="???">http:header('soapaction')</variable>
+                    <if v:soapAction="???">
+                        <variable name="soapAction">xpath:string("local-name(/soapenv:Envelope/soapenv:Body/w:*)")</variable>
+                    </if>
+                </when>
+                <otherwise>
+                    <log>Unsupported content-type, see dumps/{REQ_NO}.*</log>
+                    <dump requestHeadersFile="{basedir}dumps/{REQ_NO}.headers" requestBodyFile="{basedir}dumps/{REQ_NO}.body"/>
+                    <use-response-from host="&wsHost;" port="&wsPort;" persistence="disabled"/>
+                </otherwise>
+            </choose>
+            <variable name="operation">re:replace(soapAction, '"?(?:http:.+/)?([^/"]+)"?', '$1')</variable>
+            <choose>
+                <when v:operation="getAirportInformationByAirportCode"><variable name="id">xpath:string("//w:airportCode/text()")</variable></when>
+                <when v:operation="getAirportInformationByISOCountryCode"><variable name="id">xpath:string("//w:CountryAbbrviation/text()")</variable></when>
+                <otherwise>
+                    <log>Unsupported operation, see dumps/{operation}-{REQ_NO}.*</log>
+                    <dump requestHeadersFile="{basedir}dumps/{operation}-{REQ_NO}.headers" requestBodyFile="{basedir}dumps/{operation}-{REQ_NO}.body"/>
+                    <use-response-from host="&wsHost;" port="&wsPort;" persistence="disabled"/>
+                </otherwise>
+            </choose>
+            
+            <log>return cached response for {operation}({id})</log>
+            <set-header name="Content-Type" value="{responseType}"/>
+            <static file="xml/{soapVersion}/{operation}-{id}.xml">
+                <log>oops, cache miss! request &wsHost;:&wsPort; for {operation}({id})</log>
+                <use-response-from host="&wsHost;" port="&wsPort;"/>
+            </static>
+        </uri>
+    </POST>
+
+    <GET>
+        <uri matches="/airport.asmx/.*">
+            <variable name="operation">re:replace(http:uri(),'.*airport.asmx/([^/?]+).*','$1')</variable>
+            <choose>
+                <when v:operation="getAirportInformationByAirportCode"><variable name="id">http:parameter('airportCode')</variable></when>
+            </choose>
+            <set-header name="Content-Type" value="text/xml;charset=UTF-8"/>
+            <static file="xml/GET/{operation}-{id}.xml">
+                <use-response-from host="&wsHost;" port="&wsPort;"/>
+            </static>
+        </uri>
+        <uri matches="/airport.asmx">
+            <if test="http:hasParameter('WSDL') || http:hasParameter('wsdl')">
+                <variable name="wsi.host">http:host()</variable>
+                <variable name="wsi.port">http:port()</variable>
+                <template file="airport.wsdl"/>
+            </if>
+        </uri>
+    </GET>
+
+</ws-imitator-config>

@@ -1,0 +1,16 @@
+Requirements:
+- Java 8
+
+Usage:
+    java -jar ws-imitator.jar -b airports-data -c airport.xml -X:persistence
+or
+    java -jar ws-imitator.jar -p PORT_NUMBER -b airports-data -c airport.xml -X:persistence
+
+Stop:
+    java -jar ws-imitator.jar -s
+or
+    java -jar ws-imitator.jar -p PORT_NUMBER -s
+
+Default PORT_NUMBER is 8642.
+
+wsdl address is http://127.0.0.1:PORT_NUMBER/airport.asmx?wsdl

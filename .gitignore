@@ -1,0 +1,11 @@
+/target/
+.hg
+.hgignore
+.idea
+*.iml
+*.bak
+*.log
+dependency-reduced-pom.xml
+tomcat.*
+emias
+dumps

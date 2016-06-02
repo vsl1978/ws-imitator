@@ -1,0 +1,24 @@
+<!DOCTYPE ws-imitator-config [
+    <!ENTITY wsHost "www.webservicex.net">
+    <!ENTITY wsPort "80">
+]>
+<ws-imitator-config xmlns:w="http://www.webserviceX.NET">
+
+    <POST>
+        <uri matches="/periodictable.asmx">
+            <variable name="element" if-empty="?">xpath:string("//w:GetAtomicNumber/w:ElementName/text()")</variable>
+            <if test="xpath:bool('count(//w:GetAtomicNumber)=1')">
+                <csv file="set1.csv" lookup="csv:column('NAME')==element" prefix="PT_">
+                    <template file="response1.xml"/>
+                </csv>
+                <csv file="set2.csv" lookup="csv:column('NAME')==element" prefix="PT_">
+                    <template file="response2.xml"/>
+                </csv>
+                <static file="not-found.xml"/>
+            </if>
+        </uri>
+    </POST>
+    
+    <use-response-from host="&wsHost;" port="&wsPort;" persistence="disabled"/>
+
+</ws-imitator-config>
